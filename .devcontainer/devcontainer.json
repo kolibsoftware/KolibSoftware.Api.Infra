@@ -1,0 +1,23 @@
+{
+    "name": "C# .NET 10 Development",
+    "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csdevkit",
+                "ms-dotnettools.csharp",
+                "visualstudiotoolsforai.vsai-vscode",
+                "jmrog.vscode-nuget-package-manager",
+                "mrmlnc.vscode-duplicate-plugin"
+            ],
+            "settings": {
+                "dotnet.help.firstTimeExperience": false
+            }
+        }
+    },
+    "postCreateCommand": "dotnet restore",
+    "remoteUser": "vscode"
+}
