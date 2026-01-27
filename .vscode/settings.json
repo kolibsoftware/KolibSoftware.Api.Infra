@@ -1,0 +1,17 @@
+{
+    "editor.wordWrap": "off",
+    "editor.indentSize": 4,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "appsettings.json": "appsettings.*.json",
+        "I*.cs": "${capture}.cs",
+        "*.cs": "${capture}.*.cs",
+        "*.csproj": "${capture}.csproj.user"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+}
