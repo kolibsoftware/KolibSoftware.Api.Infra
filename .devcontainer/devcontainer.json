@@ -14,7 +14,8 @@
                 "mrmlnc.vscode-duplicate-plugin",
                 "mhutchie.git-graph",
                 "davidanson.vscode-markdownlint",
-                "ms-azuretools.vscode-containers"
+                "ms-azuretools.vscode-containers",
+                "patcx.vscode-nuget-gallery"
             ],
             "settings": {
                 "dotnet.help.firstTimeExperience": false
