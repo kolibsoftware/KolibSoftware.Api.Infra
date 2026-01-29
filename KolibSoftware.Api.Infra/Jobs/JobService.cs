@@ -31,17 +31,20 @@ public sealed class JobService(
         var attribute = jobType.GetCustomAttribute<JobAttribute>();
         var taskName = attribute?.Name ?? JobRegistry.GetJobName(jobType) ?? jobType.Name;
         var interval = attribute?.Interval ?? configuration.GetValue<TimeSpan?>($"Jobs:{taskName}:Interval") ?? TimeSpan.FromDays(1);
-        var schedule = attribute?.Schedule ?? configuration.GetValue<TimeOnly?>($"Jobs:{taskName}:Schedule") ?? TimeOnly.FromDateTime(DateTime.UtcNow);
+        var schedule = attribute?.Schedule ?? configuration.GetValue<TimeOnly?>($"Jobs:{taskName}:Schedule");
 
-        var now = DateTime.UtcNow;
-        var firstRun = now.Date + schedule.ToTimeSpan();
+        if (schedule is not null)
+        {
+            var now = DateTime.UtcNow;
+            var firstRun = now.Date + schedule.Value.ToTimeSpan();
 
-        if (firstRun < now)
-            firstRun = firstRun.AddDays(1);
+            if (firstRun < now)
+                firstRun = firstRun.AddDays(1);
 
-        var delay = firstRun - now;
-        logger.LogSchedulingJob(jobType, delay, interval);
-        await Task.Delay(delay, stoppingToken);
+            var delay = firstRun - now;
+            logger.LogSchedulingJob(jobType, delay, interval);
+            await Task.Delay(delay, stoppingToken);
+        }
 
         using var timer = new PeriodicTimer(interval);
         do
