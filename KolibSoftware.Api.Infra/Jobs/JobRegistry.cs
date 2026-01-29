@@ -1,7 +1,4 @@
 using System.Reflection;
-using KolibSoftware.Api.Infra.Jobs;
-
-[assembly: EnableJobs]
 
 namespace KolibSoftware.Api.Infra.Jobs;
 
