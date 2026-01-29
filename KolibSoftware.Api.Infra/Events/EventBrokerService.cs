@@ -64,7 +64,7 @@ public sealed class EventBusService(
         {
             try
             {
-                await handler!.HandleEventAsync((dynamic?)@event.Data, cancellationToken);
+                await handler!.HandleEventAsync((dynamic)@event.Data, cancellationToken);
                 successCount++;
             }
             catch (Exception ex)

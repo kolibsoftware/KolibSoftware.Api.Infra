@@ -4,7 +4,7 @@ public record Event(
     Guid Id,
     DateTime CreatedAt,
     string Name,
-    object? Data,
+    object Data,
     DateTime? HandledAt,
     EventStatus Status
 );

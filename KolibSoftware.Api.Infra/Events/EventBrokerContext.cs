@@ -9,7 +9,7 @@ public class EventBrokerContext(
     ILogger<EventBrokerContext> logger
 ) : IEventBrokerContext
 {
-    public async Task PublishAsync<T>(T? @event = default, CancellationToken cancellationToken = default)
+    public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : notnull
     {
         var eventName = EventRegistry.GetEventName(typeof(T)) ?? throw new InvalidOperationException($"Event type {typeof(T).FullName} is not registered in BusEventRegistry.");
         var _event = new Event(
@@ -21,7 +21,7 @@ public class EventBrokerContext(
             HandledAt: null
         );
         await eventStore.PutEventAsync(_event, cancellationToken);
-        var handlers = serviceProvider.GetServices<IEventHandler<T>>();
+        var handlers = serviceProvider.GetServices<IEventHandler<T>>().ToList();
         var successCount = 0;
         foreach (var handler in handlers)
         {
@@ -38,7 +38,7 @@ public class EventBrokerContext(
         }
         _event = _event with
         {
-            Status = successCount == handlers.Count()
+            Status = successCount == handlers.Count
             ? EventStatus.Success
             : successCount > 0
                 ? EventStatus.Partial
