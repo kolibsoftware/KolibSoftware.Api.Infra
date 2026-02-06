@@ -8,15 +8,15 @@ using KolibSoftware.Api.Infra.Events;
 
 namespace KolibSoftware.Api.Infra.Tests.Events;
 
-public class EventBusServiceTests
+public class EventBrokerServiceTests
 {
     private readonly Mock<IEventStore> _eventStoreMock = new();
     private readonly Mock<IServiceProvider> _serviceProviderMock = new();
-    private readonly Mock<ILogger<EventBusService>> _loggerMock = new();
+    private readonly Mock<ILogger<EventBrokerService>> _loggerMock = new();
     private readonly Mock<IServiceScope> _scopeMock = new();
     private readonly Mock<IServiceScopeFactory> _scopeFactoryMock = new();
 
-    public EventBusServiceTests()
+    public EventBrokerServiceTests()
     {
         _serviceProviderMock
             .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
@@ -36,8 +36,8 @@ public class EventBusServiceTests
     {
         var settings = Options.Create(new EventBrokerSettings
         {
-            DelayInterval = TimeSpan.FromMilliseconds(10),
-            AgeThreshold = TimeSpan.Zero
+            Delay = TimeSpan.FromMilliseconds(10),
+            Threshold = TimeSpan.Zero
         });
 
         var testEvent = new Event(
@@ -58,7 +58,7 @@ public class EventBusServiceTests
             .Setup(x => x.GetService(typeof(IEnumerable<IEventHandler<TestData>>)))
             .Returns(new List<IEventHandler<TestData>> { handlerMock.Object });
 
-        var sut = new EventBusService(_serviceProviderMock.Object, settings, _loggerMock.Object);
+        var sut = new EventBrokerService(_serviceProviderMock.Object, settings, _loggerMock.Object);
 
         using var cts = new CancellationTokenSource();
         var serviceTask = sut.StartAsync(cts.Token);

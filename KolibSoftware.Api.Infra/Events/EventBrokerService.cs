@@ -5,25 +5,25 @@ using Microsoft.Extensions.Options;
 
 namespace KolibSoftware.Api.Infra.Events;
 
-public sealed class EventBusService(
+public sealed class EventBrokerService(
     IServiceProvider serviceProvider,
     IOptions<EventBrokerSettings> options,
-    ILogger<EventBusService> logger
+    ILogger<EventBrokerService> logger
 ) : BackgroundService(), IEventBrokerService
 {
 
-    private readonly TimeSpan DelayInterval = options.Value.DelayInterval;
-    private readonly TimeSpan AgeThreshold = options.Value.AgeThreshold;
+    private readonly TimeSpan Delay = options.Value.Delay;
+    private readonly TimeSpan Threshold = options.Value.Threshold;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var timer = new PeriodicTimer(DelayInterval);
+        var timer = new PeriodicTimer(Delay);
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             using var scope = serviceProvider.CreateScope();
             var eventStore = scope.ServiceProvider.GetRequiredService<IEventStore>();
-            var timepoint = DateTime.UtcNow.Subtract(AgeThreshold);
-            var query = new EventQuery(AgeThreshold);
+            var timepoint = DateTime.UtcNow.Subtract(Threshold);
+            var query = new EventQuery(Threshold);
             var events = await eventStore.GetEventsAsync(query, stoppingToken);
             if (events.Any())
                 foreach (var chunk in events.Chunk(20))
