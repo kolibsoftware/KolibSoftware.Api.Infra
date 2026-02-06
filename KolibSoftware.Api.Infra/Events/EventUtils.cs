@@ -3,8 +3,17 @@ using Microsoft.Extensions.Hosting;
 
 namespace KolibSoftware.Api.Infra.Events;
 
+/// <summary>
+/// Utility class that provides extension methods for configuring and using the event broker services and handlers in the application host builder. This class includes methods to add event broker services, discover and register event handler types, and define queries for selecting pending events to be dispatched by the event broker service.
+/// </summary>
 public static class EventUtils
 {
+
+    /// <summary>
+    /// Extension method to add event broker services and handlers to the application host builder. This method configures the event broker settings, registers the event broker context and service, and discovers and registers all event handler types in the application assembly.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
     public static IHostApplicationBuilder AddEvents(this IHostApplicationBuilder builder)
     {
         builder.Services.Configure<EventBrokerSettings>(builder.Configuration.GetSection("EventBroker"));

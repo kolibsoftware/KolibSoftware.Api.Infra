@@ -2,6 +2,9 @@ using Microsoft.Extensions.Logging;
 
 namespace KolibSoftware.Api.Infra.Jobs;
 
+/// <summary>
+/// Defines strongly-typed logging methods for the Job Service, providing structured log messages for various events such as scheduling, executing, completing, and error handling of jobs.
+/// </summary>
 public static partial class JobLogs
 {
 

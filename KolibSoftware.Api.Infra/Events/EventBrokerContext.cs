@@ -3,13 +3,20 @@ using Microsoft.Extensions.Logging;
 
 namespace KolibSoftware.Api.Infra.Events;
 
+/// <summary>
+/// Event broker context that handles event publishing and processing. It uses an event store to persist events and their statuses, and it retrieves event handlers from the service provider to process events. The context also logs any errors that occur during event handling.
+/// </summary>
+/// <param name="serviceProvider"></param>
+/// <param name="eventStore"></param>
+/// <param name="logger"></param>
 public class EventBrokerContext(
     IServiceProvider serviceProvider,
     IEventStore eventStore,
     ILogger<EventBrokerContext> logger
 ) : IEventBrokerContext
 {
-    public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : notnull
+    
+    public async Task DispatchAsync<T>(T @event, CancellationToken cancellationToken = default) where T : notnull
     {
         var eventName = EventRegistry.GetEventName(typeof(T)) ?? throw new InvalidOperationException($"Event type {typeof(T).FullName} is not registered in BusEventRegistry.");
         var _event = new Event(

@@ -29,7 +29,7 @@ public class EventBrokerContextTests
             _eventStoreMock.Object,
             _loggerMock.Object);
 
-        await sut.PublishAsync(@event);
+        await sut.DispatchAsync(@event);
 
         _eventStoreMock.Verify(s => s.PutEventAsync(
             It.Is<Event>(e => e.Name == "TestData" && e.Status == EventStatus.Pending),
@@ -57,7 +57,7 @@ public class EventBrokerContextTests
 
         var sut = new EventBrokerContext(_serviceProviderMock.Object, _eventStoreMock.Object, _loggerMock.Object);
 
-        await sut.PublishAsync(@event);
+        await sut.DispatchAsync(@event);
 
         _eventStoreMock.Verify(s => s.PutEventAsync(
             It.Is<Event>(e => e.Status == EventStatus.Failure),

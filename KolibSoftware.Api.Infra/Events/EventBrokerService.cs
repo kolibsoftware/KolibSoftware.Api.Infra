@@ -5,6 +5,12 @@ using Microsoft.Extensions.Options;
 
 namespace KolibSoftware.Api.Infra.Events;
 
+/// <summary>
+/// Background service that periodically checks for pending events in the event store and dispatches them to registered handlers.
+/// </summary>
+/// <param name="serviceProvider"></param>
+/// <param name="options"></param>
+/// <param name="logger"></param>
 public sealed class EventBrokerService(
     IServiceProvider serviceProvider,
     IOptions<EventBrokerSettings> options,
@@ -42,6 +48,13 @@ public sealed class EventBrokerService(
         }
     }
 
+    /// <summary>
+    /// Dispatches a single event to all registered handlers and returns the updated event with status and handled timestamp.
+    /// </summary>
+    /// <param name="event"></param>
+    /// <param name="serviceProvider"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     private async Task<Event> DispatchEvent(Event @event, IServiceProvider serviceProvider, CancellationToken cancellationToken)
     {
         var eventType = EventRegistry.GetEventType(@event.Name);
@@ -85,6 +98,10 @@ public sealed class EventBrokerService(
         };
     }
 
+    /// <summary>
+    /// Query that selects pending events that are older than a specified age threshold, to be dispatched by the event broker service.
+    /// </summary>
+    /// <param name="age"></param>
     public sealed class EventQuery(TimeSpan age) : IEventQuery
     {
         public IQueryable<Event> Apply(IQueryable<Event> query)

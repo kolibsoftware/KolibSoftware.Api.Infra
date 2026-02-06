@@ -2,6 +2,9 @@ using Microsoft.Extensions.Logging;
 
 namespace KolibSoftware.Api.Infra.Events;
 
+/// <summary>
+/// Static class containing strongly-typed logging methods for the event broker service, using source generators for performance and maintainability.
+/// </summary>
 public static partial class EventLogs
 {
 

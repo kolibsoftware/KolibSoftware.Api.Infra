@@ -6,6 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace KolibSoftware.Api.Infra.Jobs;
 
+/// <summary>
+/// A background service that discovers and executes registered jobs based on their defined intervals and schedules.
+/// </summary>
+/// <param name="serviceProvider"></param>
+/// <param name="configuration"></param>
+/// <param name="logger"></param>
 public sealed class JobService(
     IServiceProvider serviceProvider,
     IConfiguration configuration,
@@ -26,6 +32,12 @@ public sealed class JobService(
         }
     }
 
+    /// <summary>
+    /// Dispatches a job for execution based on its defined interval and schedule.
+    /// </summary>
+    /// <param name="jobType"></param>
+    /// <param name="stoppingToken"></param>
+    /// <returns></returns>
     public async Task DispatchTask(Type jobType, CancellationToken stoppingToken = default)
     {
         var attribute = jobType.GetCustomAttribute<JobAttribute>();
