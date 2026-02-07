@@ -1,4 +1,4 @@
-namespace KolibSoftware.Api.Infra.Events;
+namespace KolibSoftware.Api.Infra.Events.Attributes;
 
 /// <summary>
 /// Indicates that the decorated class or struct is an event handler.

@@ -1,4 +1,5 @@
 using System.Reflection;
+using KolibSoftware.Api.Infra.Jobs.Attributes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

@@ -1,4 +1,4 @@
-namespace KolibSoftware.Api.Infra.Jobs;
+namespace KolibSoftware.Api.Infra.Jobs.Attributes;
 
 /// <summary>
 /// Indicates that the decorated class or struct is a job to be registered and executed by the job service. The attribute allows specifying an optional name, execution interval, and schedule for the job.

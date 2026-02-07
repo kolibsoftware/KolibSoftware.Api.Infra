@@ -1,4 +1,5 @@
 using System.Reflection;
+using KolibSoftware.Api.Infra.Events.Attributes;
 
 namespace KolibSoftware.Api.Infra.Events;
 

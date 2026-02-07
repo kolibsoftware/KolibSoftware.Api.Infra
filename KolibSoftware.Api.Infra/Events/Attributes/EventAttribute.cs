@@ -1,4 +1,4 @@
-namespace KolibSoftware.Api.Infra.Events;
+namespace KolibSoftware.Api.Infra.Events.Attributes;
 
 /// <summary>
 /// Marks a class or struct as an event. The name of the event can be specified using the constructor parameter, otherwise the name of the class or struct will be used as the event name.
