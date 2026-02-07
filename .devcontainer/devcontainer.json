@@ -11,7 +11,11 @@
                 "ms-dotnettools.csharp",
                 "visualstudiotoolsforai.vsai-vscode",
                 "jmrog.vscode-nuget-package-manager",
-                "mrmlnc.vscode-duplicate-plugin"
+                "mrmlnc.vscode-duplicate-plugin",
+                "mhutchie.git-graph",
+                "davidanson.vscode-markdownlint",
+                "ms-azuretools.vscode-containers",
+                "patcx.vscode-nuget-gallery"
             ],
             "settings": {
                 "dotnet.help.firstTimeExperience": false
