@@ -6,17 +6,23 @@ using Microsoft.Extensions.Options;
 namespace KolibSoftware.Api.Infra.Queues;
 
 /// <summary>
-/// Defines a background worker that processes messages of type <typeparamref name="TMessage"/> from a queue. The <see cref="QueueWorker{TMessage}"/> is responsible for periodically polling the queue for new messages, processing them using the registered <see cref="IMessageHandler{TMessage}"/>, and handling any exceptions that may occur during processing. The worker uses the <see cref="IMessageStore{TMessage}"/> to retrieve messages from the queue and to put messages back into the queue after processing. The behavior of the worker can be configured through the <see cref="QueueSettings"/> class, which allows for tuning the polling interval and other settings related to message processing. Implementations should ensure that the worker is resilient to failures and can recover gracefully in case of errors during message processing.
+/// Defines a background worker that processes messages of type <typeparamref name="TMessage"/> from a queue. The worker periodically polls the queue for new messages, processes them using the registered <see cref="IMessageHandler{TMessage}"/>, and handles any exceptions that may occur during processing. The worker uses the <see cref="IMessageStore{TMessage}"/> to retrieve messages from the queue and to put messages back into the queue after processing. The method runs in a loop that continues until the worker is stopped, allowing for continuous processing of messages from the queue. Implementations should ensure that the worker is resilient to failures and can recover gracefully in case of errors during message processing.
 /// </summary>
 /// <typeparam name="TMessage"></typeparam>
+/// <typeparam name="TOptions"></typeparam>
+/// <typeparam name="TStore"></typeparam>
+/// <typeparam name="THandler"></typeparam>
 /// <param name="serviceProvider"></param>
 /// <param name="options"></param>
 /// <param name="logger"></param>
-public sealed class QueueWorker<TMessage>(
+public class QueueWorker<TMessage, TOptions, TStore, THandler>(
     IServiceProvider serviceProvider,
-    IOptions<QueueSettings> options,
+    IOptions<TOptions> options,
     ILogger? logger
 ) : BackgroundService()
+    where TOptions : class, IWorkerSettings
+    where TStore : class, IMessageStore<TMessage>
+    where THandler : class, IMessageHandler<TMessage>
 {
 
     /// <summary>
@@ -35,8 +41,8 @@ public sealed class QueueWorker<TMessage>(
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
             using var scope = serviceProvider.CreateAsyncScope();
-            var messageStore = scope.ServiceProvider.GetRequiredService<IMessageStore<TMessage>>();
-            var messageHandler = scope.ServiceProvider.GetRequiredService<IMessageHandler<TMessage>>();
+            var messageStore = scope.ServiceProvider.GetRequiredService<TStore>();
+            var messageHandler = scope.ServiceProvider.GetRequiredService<THandler>();
             var messages = await messageStore.GetAsync(stoppingToken);
             if (messages.Any())
                 try
@@ -52,3 +58,25 @@ public sealed class QueueWorker<TMessage>(
     }
 
 }
+
+public class QueueWorker<TMessage, TOptions>(
+    IServiceProvider serviceProvider,
+    IOptions<TOptions> options,
+    ILogger? logger
+) : QueueWorker<TMessage, TOptions, IMessageStore<TMessage>, IMessageHandler<TMessage>>(
+    serviceProvider,
+    options,
+    logger
+)
+    where TOptions : class, IWorkerSettings
+;
+
+public class QueueWorker<TMessage>(
+    IServiceProvider serviceProvider,
+    IOptions<IWorkerSettings> options,
+    ILogger? logger
+) : QueueWorker<TMessage, IWorkerSettings, IMessageStore<TMessage>, IMessageHandler<TMessage>>(
+    serviceProvider,
+    options,
+    logger
+);
