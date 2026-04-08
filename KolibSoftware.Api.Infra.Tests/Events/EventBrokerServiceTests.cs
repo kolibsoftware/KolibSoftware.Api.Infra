@@ -67,7 +67,7 @@ public class EventBrokerServiceTests
         await Task.Delay(100);
         await sut.StopAsync(cts.Token);
 
-        handlerMock.Verify(x => x.HandleEventAsync(
+        handlerMock.Verify(x => x.HandleAsync(
             It.Is<TestData>(d => d.Message == "Hello"),
             It.IsAny<CancellationToken>()),
             Times.AtLeastOnce);
@@ -85,5 +85,5 @@ public record TestData(string Message);
 [EventHandler]
 public class TestHandler : IEventHandler<TestData>
 {
-    public Task HandleEventAsync(TestData data, CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task HandleAsync(TestData data, CancellationToken cancellationToken) => Task.CompletedTask;
 }

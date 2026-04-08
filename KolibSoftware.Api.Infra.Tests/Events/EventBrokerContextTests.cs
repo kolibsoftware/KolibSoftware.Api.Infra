@@ -17,7 +17,7 @@ public class EventBrokerContextTests
 
         var handlerMock = new Mock<IEventHandler<TestData>>();
         handlerMock
-            .Setup(h => h.HandleEventAsync(It.IsAny<TestData>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.HandleAsync(It.IsAny<TestData>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         _serviceProviderMock
@@ -35,7 +35,7 @@ public class EventBrokerContextTests
             It.Is<Event>(e => e.Name == "TestData" && e.Status == EventStatus.Pending),
             It.IsAny<CancellationToken>()), Times.Once);
 
-        handlerMock.Verify(h => h.HandleEventAsync(@event, It.IsAny<CancellationToken>()), Times.Once);
+        handlerMock.Verify(h => h.HandleAsync(@event, It.IsAny<CancellationToken>()), Times.Once);
 
         _eventStoreMock.Verify(s => s.PutEventAsync(
             It.Is<Event>(e => e.Name == "TestData" && e.Status == EventStatus.Success),
@@ -48,7 +48,7 @@ public class EventBrokerContextTests
         var @event = new TestData("Order123");
         var handlerMock = new Mock<IEventHandler<TestData>>();
         handlerMock
-            .Setup(h => h.HandleEventAsync(It.IsAny<TestData>(), It.IsAny<CancellationToken>()))
+            .Setup(h => h.HandleAsync(It.IsAny<TestData>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Boom!"));
 
         _serviceProviderMock

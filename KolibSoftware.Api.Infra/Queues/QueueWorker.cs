@@ -18,7 +18,7 @@ namespace KolibSoftware.Api.Infra.Queues;
 public class QueueWorker<TMessage, TOptions, TStore, THandler>(
     IServiceProvider serviceProvider,
     IOptions<TOptions> options,
-    ILogger? logger
+    ILogger? logger = null
 ) : BackgroundService()
     where TOptions : class, IWorkerSettings
     where TStore : class, IMessageStore<TMessage>
@@ -62,7 +62,7 @@ public class QueueWorker<TMessage, TOptions, TStore, THandler>(
 public class QueueWorker<TMessage, TOptions>(
     IServiceProvider serviceProvider,
     IOptions<TOptions> options,
-    ILogger? logger
+    ILogger? logger = null
 ) : QueueWorker<TMessage, TOptions, IMessageStore<TMessage>, IMessageHandler<TMessage>>(
     serviceProvider,
     options,
@@ -74,7 +74,7 @@ public class QueueWorker<TMessage, TOptions>(
 public class QueueWorker<TMessage>(
     IServiceProvider serviceProvider,
     IOptions<IWorkerSettings> options,
-    ILogger? logger
+    ILogger? logger = null
 ) : QueueWorker<TMessage, IWorkerSettings, IMessageStore<TMessage>, IMessageHandler<TMessage>>(
     serviceProvider,
     options,
