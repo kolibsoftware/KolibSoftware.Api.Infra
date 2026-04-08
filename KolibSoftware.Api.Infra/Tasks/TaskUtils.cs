@@ -17,9 +17,10 @@ public static class TaskUtils
         where TStore : class, IMessageStore<ITask>
     {
         builder.Services.Configure<TaskWorkerSettings>(builder.Configuration.GetSection("TaskWorker"));
-        builder.Services.AddTransient<IMessageStore<ITask>, TStore>();
+        builder.Services.AddScoped<IMessageStore<ITask>, TStore>();
         builder.Services.AddSingleton<IMessageHandler<ITask>, TaskHandler>();
         builder.Services.AddHostedService<QueueWorker<ITask, TaskWorkerSettings>>();
+        builder.Services.AddScoped<ITaskService, TaskService>();
         return builder;
     }
 
